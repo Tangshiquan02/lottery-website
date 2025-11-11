@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>双十一幸运转盘 - 测试版</title>
+    <title>双十一幸运转盘 - 安全版</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,8 +15,7 @@
                     <div class="modal-icon">🎁</div>
                     <span>双十一幸运抽奖</span>
                 </div>
-                <!-- 暂时去掉关闭按钮的 JS -->
-                <button class="modal-close">✕</button>
+                <button class="modal-close" id="modalClose">✕</button>
             </div>
 
             <div class="lottery-container" id="lotteryContainer">
@@ -46,7 +45,6 @@
             </div>
 
             <div class="modal-footer">
-                <!-- 暂时去掉 onclick -->
                 <button class="modal-button" id="lotteryButton">立即抽奖</button>
                 <button class="modal-button claim-button" id="claimButton" style="display: none;">领取奖品</button>
             </div>
@@ -66,13 +64,42 @@
         </div>
     </div>
 
-    <!-- 音频保留，但不自动播放 -->
+    <!-- 音频保留 -->
     <audio id="prankAudio" preload="auto">
         <source src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7537318707513625363.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- 暂时不加载 JS -->
-    <!-- <script src="script.js"></script>
-    <script src="1.js"></script> -->
+    <!-- 安全加载 JS -->
+    <script>
+    // 尝试加载原来的 script.js 和 1.js
+    function safeLoadJS(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+
+    // 依次加载 JS 文件
+    safeLoadJS('script.js').catch(e => console.warn('script.js 加载失败:', e));
+    safeLoadJS('1.js').catch(e => console.warn('1.js 加载失败:', e));
+
+    // 给立即抽奖按钮绑定安全函数
+    document.getElementById('lotteryButton').addEventListener('click', function() {
+        if (typeof startLottery === 'function') {
+            startLottery();
+        } else {
+            alert('抽奖功能暂不可用，JS 尚未加载。');
+        }
+    });
+
+    // 给关闭弹窗按钮绑定安全函数
+    document.getElementById('modalClose').addEventListener('click', function() {
+        const modal = document.getElementById('modal');
+        if (modal) modal.style.display = 'none';
+    });
+    </script>
 </body>
 </html>
