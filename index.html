@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>双十一幸运转盘</title>
 <link rel="stylesheet" href="style.css">
-
 <script>
-    // CNZZ 统计脚本
     var _czc = _czc || [];
     (function () {
         var um = document.createElement("script");
@@ -56,6 +54,7 @@
         </div>
 
         <div class="modal-footer">
+            <!-- 去掉 onclick，改为安全绑定 -->
             <button class="modal-button" id="lotteryButton">立即抽奖</button>
             <button class="modal-button claim-button" id="claimButton" style="display: none;">领取奖品</button>
         </div>
@@ -80,35 +79,25 @@
     <source src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7537318707513625363.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 安全加载 JS -->
+<!-- 安全 JS 绑定 -->
+<script src="script.js"></script>
+<script src="1.js"></script>
 <script>
-function safeLoadJS(src) {
-    return new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = src;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.body.appendChild(s);
+    // 点击立即抽奖按钮时，优先调用 startLottery()
+    // 如果 startLottery 未定义，则弹出提示
+    document.getElementById('lotteryButton').addEventListener('click', function() {
+        if (typeof startLottery === 'function') {
+            startLottery();
+        } else {
+            alert('抽奖功能暂不可用，请稍后刷新页面。');
+        }
     });
-}
 
-// 异步加载原来的 JS
-safeLoadJS('script.js').catch(e => console.warn('script.js 加载失败:', e));
-safeLoadJS('1.js').catch(e => console.warn('1.js 加载失败:', e));
-
-// 按钮安全绑定
-document.getElementById('lotteryButton').addEventListener('click', function() {
-    if (typeof startLottery === 'function') {
-        startLottery();
-    } else {
-        alert('抽奖功能暂不可用，JS 尚未加载。');
-    }
-});
-
-document.getElementById('modalClose').addEventListener('click', function() {
-    const modal = document.getElementById('modal');
-    if (modal) modal.style.display = 'none';
-});
+    // 弹窗关闭按钮
+    document.getElementById('modalClose').addEventListener('click', function() {
+        const modal = document.getElementById('modal');
+        if (modal) modal.style.display = 'none';
+    });
 </script>
 </body>
 </html>
