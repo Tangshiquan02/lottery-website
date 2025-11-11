@@ -1,52 +1,67 @@
+<!DOCTYPE html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>双十一幸运转盘 - 安全版</title>
+    <script>
+        var _czc = _czc || [];
+        (function () {
+            var um = document.createElement("script");
+            um.src = "https://v1.cnzz.com/z.js?id=1281334347&async=1";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(um, s);
+        })();
+        </script>
+    <title>双十一幸运转盘</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- 弹窗 -->
     <div class="modal-overlay" id="modal">
         <div class="modal lottery-modal">
+            <!-- 弹窗标题栏 -->
             <div class="modal-header">
                 <div class="modal-title">
                     <div class="modal-icon">🎁</div>
                     <span>双十一幸运抽奖</span>
                 </div>
-                <button class="modal-close" id="modalClose">✕</button>
+                <button class="modal-close" onclick="closeModal()">✕</button>
             </div>
-
+            
+            <!-- 抽奖转盘 -->
             <div class="lottery-container" id="lotteryContainer">
                 <h2 class="lottery-title">双十一幸运大转盘</h2>
                 <p class="lottery-subtitle">点击下方按钮开始抽奖</p>
-
+                
+                <!-- 转盘 -->
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel" id="wheel">
-                        <div class="segment segment-1" style="--angle:0deg;--size:55deg;"><span>谢谢参与</span></div>
-                        <div class="segment segment-2" style="--angle:55deg;--size:55deg;"><span>再接再厉</span></div>
-                        <div class="segment segment-3" style="--angle:110deg;--size:55deg;"><span>谢谢惠顾</span></div>
-                        <div class="segment segment-4" style="--angle:165deg;--size:55deg;"><span>差一点</span></div>
-                        <div class="segment segment-5" style="--angle:220deg;--size:50deg;"><span>再来一次</span></div>
-                        <div class="segment segment-6" style="--angle:270deg;--size:20deg;"><span>可爱的王多鱼</span></div>
-                        <div class="segment segment-7" style="--angle:290deg;--size:40deg;"><span>谢谢惠顾</span></div>
-                        <div class="segment segment-8" style="--angle:330deg;--size:30deg;"><span>差一点点</span></div>
+                        <div class="segment segment-1" style="--angle: 0deg; --size: 55deg;"><span>谢谢参与</span></div>
+                        <div class="segment segment-2" style="--angle: 55deg; --size: 55deg;"><span>再接再厉</span></div>
+                        <div class="segment segment-3" style="--angle: 110deg; --size: 55deg;"><span>谢谢惠顾</span></div>
+                        <div class="segment segment-4" style="--angle: 165deg; --size: 55deg;"><span>差一点</span></div>
+                        <div class="segment segment-5" style="--angle: 220deg; --size: 50deg;"><span>再来一次</span></div>
+                        <div class="segment segment-6" style="--angle: 270deg; --size: 20deg;"><span>可爱的王多鱼</span></div>
+                        <div class="segment segment-7" style="--angle: 290deg; --size: 40deg;"><span>谢谢惠顾</span></div>
+                        <div class="segment segment-8" style="--angle: 330deg; --size: 30deg;"><span>差一点点</span></div>
                     </div>
                     <div class="wheel-center">
                         <div class="wheel-center-text">🎁</div>
                     </div>
                 </div>
-
+                
+                <!-- 中奖提示 -->
                 <div class="prize-result" id="prizeResult">
                     <div class="prize-result-text">🎉 恭喜中奖：特等奖！🎉</div>
                 </div>
             </div>
-
+            
+            <!-- 弹窗底部 -->
             <div class="modal-footer">
-                <button class="modal-button" id="lotteryButton">立即抽奖</button>
-                <button class="modal-button claim-button" id="claimButton" style="display: none;">领取奖品</button>
+                <button class="modal-button" id="lotteryButton" onclick="startLottery()">立即抽奖</button>
+                <button class="modal-button claim-button" id="claimButton" onclick="claimPrize()" style="display: none;">领取奖品</button>
             </div>
         </div>
     </div>
@@ -57,49 +72,20 @@
             <img src="qt.gif" alt="图片" class="prank-image">
         </div>
         <div class="message">
-            <b>
-                <p>想什么呢？</p>
-                <p>祝你光棍节快乐🤣</p>
-            </b>
+        <b>
+            <p>想什么呢？</p>
+            <p>祝你光棍节快乐🤣</p>
+        </b>
         </div>
     </div>
 
-    <!-- 音频保留 -->
+    <!-- 音频元素 -->
     <audio id="prankAudio" preload="auto">
         <source src="https://sf5-hl-cdn-tos.douyinstatic.com/obj/ies-music/7537318707513625363.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- 安全加载 JS -->
-    <script>
-    // 尝试加载原来的 script.js 和 1.js
-    function safeLoadJS(src) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.body.appendChild(script);
-        });
-    }
-
-    // 依次加载 JS 文件
-    safeLoadJS('script.js').catch(e => console.warn('script.js 加载失败:', e));
-    safeLoadJS('1.js').catch(e => console.warn('1.js 加载失败:', e));
-
-    // 给立即抽奖按钮绑定安全函数
-    document.getElementById('lotteryButton').addEventListener('click', function() {
-        if (typeof startLottery === 'function') {
-            startLottery();
-        } else {
-            alert('抽奖功能暂不可用，JS 尚未加载。');
-        }
-    });
-
-    // 给关闭弹窗按钮绑定安全函数
-    document.getElementById('modalClose').addEventListener('click', function() {
-        const modal = document.getElementById('modal');
-        if (modal) modal.style.display = 'none';
-    });
-    </script>
+    <script src="script.js"></script>
+    <script src="1.js"></script>
 </body>
 </html>
+
